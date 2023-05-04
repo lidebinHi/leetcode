@@ -5,21 +5,21 @@
  * @param {number[]} nums
  * @return {number}
  */
+// 找以nums[i]为结尾的子序列可以找到所有连续子序列
+// 设 dp[i]存储的死是以nums[i]为结尾的子序列中最大的和 那么 dp[i + 1] = max[dp[i + 1] + nums[i + 1], dp[i + 1]]
+// 全部循环完成dp中存储的是以nums[i]为结尾的子序列的最大和 但是不是所有子序列的最大和 所以还要再次比较找到最大值
 const maxSubArray = (nums) => {
     if(nums.length ===1 ) return nums[0]
     const dp = [nums[0]]
+    let max = 0
     for(let i = 1; i < nums.length; i++) {
-        let maxI = dp[i - 1]
-        let sum = 0
-        for(let j = i; j >= 0; j--)  {
-            sum = sum + nums[j]
-            if(sum > maxI) {
-                maxI = sum
-            }
-        }
-        dp[i] = maxI
+        dp[i] = dp[i - 1] + nums[i] > nums[i] ? dp[i - 1] + nums[i] : nums[i]
     }
-    return dp[dp.length - 1]
+
+    for (let i = 0; i < dp.length; i++) {
+        if(dp[i] <= max) continue
+        max = dp[i]
+    }
+    return max
 };
 
-console.log(maxSubArray([-2,1,-3,4,-1,2,1,-5,4]));
